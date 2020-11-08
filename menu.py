@@ -90,7 +90,35 @@ def webserver():
     os.system('sudo systemctl stop firewalld')
     output=os.system('curl 192.168.1.11/index.html')
     print(output)
-    
+#--------------Function for LVM---------------------------------
+def LVM():
+    fdisk = os.system('sudo fdisk -l')
+    print(fdisk)
+    hdname = input('Enter the hardisk name: ')
+    pv = os.system('sudo pvcreate {}'.format(hdname))
+    print(pv)
+    vgname = input('Enter Vgname: ')
+    vg = os.system('sudo vgcreate {}  {}'.format(vgname,hdname)) 
+    lvname = input('Enter Lvname: ')
+    lvsize = input('Enter the size of Lv in G/M: ')
+    os.system('sudo lvcreate --size {} --name {} {}'.format(lvsize,lvname,vgname))
+    os.system('sudo mkfs.ext4 /dev/{}/{}'.format(vgname,lvname))
+    dir = input('Enter a name to create a directory  for mounting to lv: ')
+    directory = os.system('sudo mkdir /{}'.format(dir))
+    print(directory)
+    os.system('sudo mount /dev/{}/{}  /{}'.format(vgname,lvname,dir))
+    df = os.system('df -hT')
+    print(df)
+#-------------Function for Incresing the size of lvm oonfly-----------
+def LVMONFLY():
+    size = input('Enter the size to increase(+)/decrease(-)with G/M: ')
+    lvdisplay =  os.system('lvdisplay')
+    print(lvdisplay)
+    lvm = input('Enter the lv name: ')
+    os.system('lvextend --size {} /dev/{}'.format(size,lvm))
+    os.system('sudo resize2fs {}'.format(lvm))
+    dfht = os.system('df -hT')
+    print(dfht)       
 #-----------------------------------------------------------Functions for remote vms------------------------------------------#
 
 #------------function for configuring docker--------------
@@ -200,7 +228,9 @@ while True:
         print('Press 4 to configure ansible[contoller node]')
         print('press 5 to setup hadoop namenode')
         print('press 6 to setup hadoop datanode')
-        print('press 8 to go back')
+        print('press 7 to set a lvm partion')
+        print('press 8 to increase the size of lvm on fly')
+        print('press 9 to go back')
         print('Enter your choice : ', end='')
         cmd1 = input()
 
@@ -212,8 +242,11 @@ while True:
     
         elif '3' in cmd1:
            container()
-    
+        elif '7' in cmd1:
+           LVM()
         elif '8' in cmd1:
+           LVMONFLY()
+        elif '9' in cmd1:
            break
         
         else:
