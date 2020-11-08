@@ -111,7 +111,7 @@ def LVM():
     print(df)
 #-------------Function for Incresing the size of lvm oonfly-----------
 def LVMONFLY():
-    size = input('Enter the size to increase(+)/decrease(-)with G/M: ')
+    size = input('Enter the size to increase(+) with G/M: ')
     lvdisplay =  os.system('lvdisplay')
     print(lvdisplay)
     lvm = input('Enter the lv name: ')
@@ -296,7 +296,13 @@ while True:
         print('press 6 to setup hadoop datanode')
         print('press 7 to set a lvm partion')
         print('press 8 to increase the size of lvm on fly')
-        print('press 9 to go back')
+        print('press 9 to create your own key pair in aws')
+        print('press 10 to create a security group in aws')
+        print('press 11 to create EBS volume')
+        print('press 12 to create a S3 bucket')
+        print('press 13 to launch an instance')
+        print('press 14 to use custom aws CLI command by your own')
+        print('press 15 to go back')
         print('Enter your choice : ', end='')
         cmd1 = input()
 
@@ -331,6 +337,33 @@ while True:
            LVM()
         elif '8' in cmd1:
            LVMONFLY()
+        elif  '9' in cmd1:
+	       key_pair = input('Enter the key name you want to create: ')
+	       os.system('aws ec2 create-key-pair --key-name {}' .format(key_pair))
+        elif '10' in cmd1:
+           security_group_name = input('Enter security group name you want to create: ')
+	       os.system('aws ec2 create-security-roup --group-name {} --description "Allow SSH' .format(security_group_name))
+        elif '11' in cmd1:
+           ebs_volume_size = input('enter the Volume size you want to create: ')
+	       availability_zone = input('enter the region where you want to create the volume1: ')
+   	       os.system('aws ec2 create-volume --size {} --volume-type gp2 --availability-zone {}' .format(ebs_volume_size,availability_zone))
+        elif '12' in cmd1:
+           region_name = input('Enter the region where you want to create a S3 bucket')
+           bucket_name = input('Enter a unique bucket name to create in your given region')
+	       os.system('aws s3api create-bucket --bucket {} --region {}' .format(bucket_name,region_name))
+        elif '13' in cmd1:
+           image_id = input('Enter the AMI ID: ' )
+	       count = input('enter the no. of instance you want to launch: ')
+	       instance_type = input('Enter the instance type: ')
+	       key_name = input('enter the key pair: ')
+	       security = input('enter the security group id: ')
+	       print()
+	       os.system('aws ec2 run-instances --image-id {} --count {} --instance-type {} --key-name {} --security-group-ids {}' .format(image_id,count,instance_type,key_name,security))
+        elif '14' in cmd1:
+           custom = input("""Enter the aws command below:  
+>>>aws """)
+	       os.system('aws {}' .format(custom))
+           
         elif '9' in cmd1:
            break
         
@@ -345,10 +378,7 @@ while True:
         print('press 1 to install and start docker services in your remote vm')
         print('Press 2 to setup apache webserver in your remote vm')
         print('Press 3 to see all serivces of docker in your remote vm')
-        print('Press 4 to configure ansible[contoller node] in your remote vm')
-        print('press 5 to setup hadoop namenode in your remote vm')
-        print('press 6 to setup hadoop datanode in your remote vm')
-        print('press 8 to go back')
+        print('press 4 to go back')    
         print('Enter your choice : ', end='')
         cmd2 = input()
         if '1' in cmd2:
@@ -357,7 +387,7 @@ while True:
           remotewebserver()
         elif '3' in cmd2:
           remotecontainer()
-        elif '8' in cmd2:
+        elif '4' in cmd2:
           break
         else:
           print('Enter valid option')  
