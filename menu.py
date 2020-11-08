@@ -118,7 +118,14 @@ def LVMONFLY():
     os.system('lvextend --size {} /dev/{}'.format(size,lvm))
     os.system('sudo resize2fs {}'.format(lvm))
     dfht = os.system('df -hT')
-    print(dfht)       
+    print(dfht)     
+
+#------------------------Function for installing ansible-------------
+def ansible():    
+    os.system('sudo yum install python3 -y')  #to install python software
+    os.system('sudo pip3 install ansible ') #to install ansible software
+    ans = os.system('ansible --version')
+    print(ansible)
 #-----------------------------------------------------------Functions for remote vms------------------------------------------#
 
 #------------function for configuring docker--------------
@@ -242,6 +249,9 @@ while True:
     
         elif '3' in cmd1:
            container()
+        elif '4' in cmd1:
+           ansible()
+           
         elif '7' in cmd1:
            LVM()
         elif '8' in cmd1:
