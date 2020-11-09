@@ -388,7 +388,7 @@ while True:
            custom = input("""Enter the aws command below:  >>>aws """)
            os.system('aws {}' .format(custom))
            
-        elif '9' in cmd1:
+        elif '15' in cmd1:
            break
         
         else:
