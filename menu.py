@@ -88,7 +88,8 @@ def webserver():
     os.system('sudo cp index.html  /var/www/html/')
     os.system('sudo systemctl start httpd')
     os.system('sudo systemctl stop firewalld')
-    output=os.system('curl 192.168.1.11/index.html')
+    vm_ip = input('Enter your vm ip: ')
+    output=os.system('curl {}/index.html'.format(vm_ip) #Ip of the vm for seeing the result
     print(output)
 #--------------Function for LVM---------------------------------
 def LVM():
@@ -205,7 +206,7 @@ def remotewebserver():
     os.system('sudo scp index.html root@{}:/var/www/html/'.format(remote_ip))
     os.system('ssh {}  systemctl start httpd'.format(remote_ip))
     os.system('ssh {}  systemctl stop firewalld'.format(remote_ip))
-    output=os.system('ssh {} curl 192.168.1.10/index.html'.format(remote_ip))
+    output=os.system('ssh {} curl {}/index.html'.format(remote_ip,remote_ip))
     print(output)
 #------Function for docker services----------------
 
