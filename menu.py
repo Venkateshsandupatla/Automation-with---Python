@@ -299,6 +299,7 @@ while True:
         print('press 6 to setup hadoop datanode')
         print('press 7 to set a lvm partion')
         print('press 8 to increase the size of lvm on fly')
+		     # For using aws we have to install aws cli prior in your vm
         print('press 9 to create your own key pair in aws')
         print('press 10 to create a security group in aws')
         print('press 11 to create EBS volume')
