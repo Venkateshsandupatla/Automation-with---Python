@@ -1,5 +1,5 @@
 # Automation-with---Python
-The main Code is menu.py (ignore other files) 
+The main Code is menu.py  Download docker.repo and hi.py to your vm then start using our program
 
 In this Program we gonna achieve intresting things that is automation using Python:
 
