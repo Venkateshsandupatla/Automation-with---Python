@@ -1,5 +1,6 @@
 # Automation-with---Python
-The main Code is menu.py 
+The main Code is menu.py (ignore other files) 
+
 In this Program we gonna achieve intresting things that is automation using Python:
 
 List of Autmation Things:
