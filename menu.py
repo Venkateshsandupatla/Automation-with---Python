@@ -9,7 +9,8 @@ print()
 #-------------------------- Function for docker installation------------------
 
 def docker():
-    os.system('sudo cp docker.repo /etc/yum.repos.d/docker.repo')
+    #See the docker.repo file and download it into your vm
+    os.system('sudo cp docker.repo /etc/yum.repos.d/docker.repo') 
     repolist= os.system('sudo yum repolist')
     os.system('sudo yum install docker-ce --nobest')
     os.system('sudo systemctl start docker')
@@ -58,13 +59,19 @@ def container():
        os.system('sudo systemctl disable firewalld')
        os.system('sudo docker run -dit --name {} -p {}:80 {}'.format(nameoftheos,portno,nameoftheimage))
        os.system('sudo docker exec {} yum install httpd -y'.format(nameoftheos))
+       os.system('sudo echo hi this our team task >> index.html')
        os.system('sudo docker cp index.html {}:/var/www/html'.format(nameoftheos))
        os.system('sudo docker exec {} /usr/sbin/httpd'.format(nameoftheos))
+       vmip = input('Enter your vm ip: ')
+       d = os.system('sudo curl {}:80'.format(vmip))
+       print(d)
      elif int(con) == 6:
        st = os.system('docker ps')
        print(st)
        osname = input('Enter your container name: ') 
-       os.system('sudo docker exec {} yum install python3 -y'.format(osname))           
+      
+       os.system('sudo docker exec {} yum install python3 -y'.format(osname))
+       # see the hi.py from github and copy to your vm
        os.system('sudo docker cp hi.py {}:/'.format(osname)) 
        pyoutput = os.system('docker exec {} python3 hi.py'.format(osname))
        print(pyoutput)
@@ -85,11 +92,13 @@ def container():
 
 def webserver():
     os.system('sudo yum install httpd -y')
+    os.system('sudo echo hi this is our websever >> index.html')
     os.system('sudo cp index.html  /var/www/html/')
     os.system('sudo systemctl start httpd')
     os.system('sudo systemctl stop firewalld')
     vm_ip = input('Enter your vm ip: ')
-    output=os.system('curl {}/index.html'.format(vm_ip) #Ip of the vm for seeing the result
+    output = os.system('curl {}/index.html'.format(vm_ip)) 
+    #Ip of the vm for seeing the result
     print(output)
 
 #--------------Function for LVM-------------------
@@ -193,22 +202,33 @@ def hdfs_site():
 #------------function for configuring docker--------------
 
 def remotedocker():
-   
+    print('This is well take some time please be patient')
     os.system('sudo scp docker.repo root@{}:/etc/yum.repos.d/'.format(remote_ip))
-
+    print('type pass for next step')
     repolist= os.system('sudo ssh {}  yum repolist'.format(remote_ip))
+    print('type pass for next step')
+
     os.system('sudo ssh {}  yum install docker-ce --nobest'.format(remote_ip))
+    print('type pass for next step')
     os.system('sudo ssh {}  systemctl start docker'.format(remote_ip))
+    print('type pass for next step')
     os.system('sudo ssh {}  systemctl enable docker'.format(remote_ip))
 
 #----Function for configuring webserver -----------    
 
 def remotewebserver():
+    print('This is well take some time please be patient')
     os.system('ssh {} sudo yum install httpd -y'.format(remote_ip))
-    os.system('sudo scp index.html root@{}:/var/www/html/'.format(remote_ip))
+    print('type pass for next step')
+    os.system('sudo echo hi this is our remote webserver >> hi.html')
+    os.system('sudo scp hi.html root@{}:/var/www/html/'.format(remote_ip))
+    print('type pass for next step')
     os.system('ssh {}  systemctl start httpd'.format(remote_ip))
+    print('type pass for next step')
     os.system('ssh {}  systemctl stop firewalld'.format(remote_ip))
-    output=os.system('ssh {} curl {}/index.html'.format(remote_ip,remote_ip))
+    print('type pass for next step')
+    output=os.system('ssh {} curl {}/hi.html'.format(remote_ip,remote_ip))
+    print('type pass for next step')
     print(output)
 #------Function for docker services----------------
 
@@ -246,11 +266,12 @@ def remotecontainer():
        nameoftheos = input('Enter os name where you want to configure apache webserver: ')
        nameoftheimage = input('Enter imagenamewithversion: ')
        portno = input('Enter port number: ')
+       os.system('sudo ssh {} echo hi this is remote docker webserver >> do.html'.format(remote_ip))
        os.system('sudo ssh {} systemctl stop firewalld'.format(remote_ip))
        os.system('sudo ssh {} systemctl disable firewalld'.format(remote_ip))
        os.system('sudo ssh {} docker run -dit --name {} -p {}:80 {}'.format(remote_ip,nameoftheos,portno,nameoftheimage))
        os.system('sudo ssh {} docker exec {} yum install httpd -y'.format(remote_ip,nameoftheos))
-       os.system('sudo ssh {} docker cp /var/www/html/index.html {}:/var/www/html'.format(remote_ip,nameoftheos))
+       os.system('sudo ssh {} docker cp do.html {}:/var/www/html'.format(remote_ip,nameoftheos))
        os.system('sudo ssh {} docker exec {} /usr/sbin/httpd'.format(remote_ip,nameoftheos))
        weboutput = os.system('sudo ssh {} curl {}:{}'.format(remote_ip,remote_ip,portno)) 
        print(weboutput)
@@ -259,14 +280,10 @@ def remotecontainer():
        print(st)
        osname = input('Enter your container name: ')
        os.system('sudo ssh {}  docker exec {} yum install python3 -y'.format(remote_ip,osname))
+       # see hi.py in github and copy to your vm
        os.system('sudo scp hi.py root@{}:'.format(remote_ip)) 
        os.system('sudo ssh {} docker cp hi.py {}:/'.format(remote_ip,osname))
        pyoutput =  os.system('sudo ssh {} docker exec {} python3 hi.py'.format(remote_ip,osname))
-      # pypage = input('Enter code for python page: ')
-      # os.system('sudo  echo {} > python.py'.format(pypage))
-      # os.system('sudo scp python.py root@{}:/home/venky'.format(remote_ip))
-      # os.system('sudo ssh {} docker cp /home/venky/python.py {}:/'.format(remote_ip,osname))
-      # pyoutput = os.system('ssh {} docker exec {} python3 python.py'.format(remote_ip,osname))
        print(pyoutput)
      elif int(con) == 7:
        conatiners =os.system('ssh {} sudo docker ps'.format(remote_ip))
@@ -299,7 +316,7 @@ while True:
         print('press 6 to setup hadoop datanode')
         print('press 7 to set a lvm partion')
         print('press 8 to increase the size of lvm on fly')
-		     # For using aws we have to install aws cli prior in your vm
+		     # For using aws we have to install aws cli prior in your vm and configure the credentiasl
         print('press 9 to create your own key pair in aws')
         print('press 10 to create a security group in aws')
         print('press 11 to create EBS volume')
@@ -321,6 +338,7 @@ while True:
         elif '4' in cmd1:
            ansible()
         elif '5' in cmd1:
+           # copy hadoop and jdk file to your vm
            os.system('rpm -ivh /root/hadoop-1.2.1-1.x86_64.rpm --force')
            os.system('rpm -ivh /root/jdk-8u171-linux-x64.rpm')
            hdfs_site()
@@ -330,6 +348,7 @@ while True:
            jps = os.system('jps')
            print(jps)
         elif '6' in cmd1:
+           # copy hadoop and jdk file to your vm
            os.system('rpm -ivh /root/hadoop-1.2.1-1.x86_64.rpm --force')
            os.system('rpm -ivh /root/jdk-8u171-linux-x64.rpm')
            hdfs_site()
@@ -342,30 +361,32 @@ while True:
         elif '8' in cmd1:
            LVMONFLY()
         elif  '9' in cmd1:
-	       key_pair = input('Enter the key name you want to create: ')
-	       os.system('aws ec2 create-key-pair --key-name {}' .format(key_pair))
+           key_pair = input('Enter your key name: ')
+           os.system('aws ec2 create-key-pair --key-name {}'.formate(key_pair))
         elif '10' in cmd1:
            security_group_name = input('Enter security group name you want to create: ')
-	       os.system('aws ec2 create-security-roup --group-name {} --description "Allow SSH' .format(security_group_name))
+           os.system('aws ec2 create-security-group --group-name {} --description Allow SSh'.format(security_group_name))
         elif '11' in cmd1:
-           ebs_volume_size = input('enter the Volume size you want to create: ')
-	       availability_zone = input('enter the region where you want to create the volume1: ')
-   	       os.system('aws ec2 create-volume --size {} --volume-type gp2 --availability-zone {}' .format(ebs_volume_size,availability_zone))
+            ebs_volume_size = input('Enter the volume size you wnat to create: ')
+            availability_zone = input('enter the region where you want to create: ')
+            os.system('aws ec2 create-volume --size {} --volume-type gp2 --availability-zone {}'.format(ebs_volume_size,availability_zone))
         elif '12' in cmd1:
            region_name = input('Enter the region where you want to create a S3 bucket')
            bucket_name = input('Enter a unique bucket name to create in your given region')
-	       os.system('aws s3api create-bucket --bucket {} --region {}' .format(bucket_name,region_name))
+           os.system('aws s3api create-bucker --bucket {} --region {}'.format(bucker_name,region_name))
         elif '13' in cmd1:
            image_id = input('Enter the AMI ID: ' )
-	       count = input('enter the no. of instance you want to launch: ')
-	       instance_type = input('Enter the instance type: ')
-	       key_name = input('enter the key pair: ')
-	       security = input('enter the security group id: ')
-	       print()
-	       os.system('aws ec2 run-instances --image-id {} --count {} --instance-type {} --key-name {} --security-group-ids {}' .format(image_id,count,instance_type,key_name,security))
+           count = input('Enter the no.of instances you want to launch: ')
+           instance_type = input('Enter the instance type: ')
+           key_name = input('Enter the keypair: ')
+           security = input('Enter the security group id: ')
+           print()
+           os.system('aws ec2 run-instances --image-id {} --count {} --instnace-type {} --key-name {} --security-group-ids {}'.format(image_id,count,instance_type,key_name,security))
+
+	  
         elif '14' in cmd1:
            custom = input("""Enter the aws command below:  >>>aws """)
-	       os.system('aws {}' .format(custom))
+           os.system('aws {}' .format(custom))
            
         elif '9' in cmd1:
            break
