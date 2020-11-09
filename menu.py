@@ -91,7 +91,9 @@ def webserver():
     vm_ip = input('Enter your vm ip: ')
     output=os.system('curl {}/index.html'.format(vm_ip) #Ip of the vm for seeing the result
     print(output)
-#--------------Function for LVM---------------------------------
+
+#--------------Function for LVM-------------------
+#--------------for this we have to add a hardisk in the vm you can do it from vm settings--------------
 def LVM():
     fdisk = os.system('sudo fdisk -l')
     print(fdisk)
@@ -361,8 +363,7 @@ while True:
 	       print()
 	       os.system('aws ec2 run-instances --image-id {} --count {} --instance-type {} --key-name {} --security-group-ids {}' .format(image_id,count,instance_type,key_name,security))
         elif '14' in cmd1:
-           custom = input("""Enter the aws command below:  
->>>aws """)
+           custom = input("""Enter the aws command below:  >>>aws """)
 	       os.system('aws {}' .format(custom))
            
         elif '9' in cmd1:
