@@ -1,6 +1,6 @@
 # Automation-with---Python
 The main Code is menu.py  Download docker.repo and hi.py to your vm then start using our program
-First install aws cli in your vm 
+First install aws cli in your vm and download jdk and hadoop file into your vm
 In this Program we gonna achieve intresting things that is automation using Python:
 
 List of Autmation Things:
