@@ -128,7 +128,7 @@ def LVMONFLY():
     print(lvdisplay)
     lvm = input('Enter the lv name: ')
     os.system('lvextend --size {} /dev/{}'.format(size,lvm))
-    os.system('sudo resize2fs {}'.format(lvm))
+    os.system('sudo resize2fs /dev/{}'.format(lvm))
     dfht = os.system('df -hT')
     print(dfht)       
 #-----------------------------Function for Ansible insatllation-----------
